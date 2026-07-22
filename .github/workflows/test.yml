@@ -14,12 +14,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Supported lines (July 2026): 22 Maintenance LTS, 24 Active LTS, 26 Current
+        # Supported lines: 22 Maintenance LTS, 24 Active LTS, 26 Current
         node-version: [22, 24, 26]
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
