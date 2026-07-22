@@ -4,11 +4,7 @@
  * Run from repo root (after `npm run build`):
  *   node examples/basic.mjs
  */
-import {
-  fetchImageUrls,
-  extractAppended,
-  validityVerification,
-} from '../dist/index.mjs';
+import { fetchImageUrls, extractAppended, validityVerification } from '../dist/index.mjs';
 
 const ALBUM_URL = 'https://photos.app.goo.gl/oJEMCo5g5eUptS2fA';
 

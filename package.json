@@ -33,17 +33,20 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yumetodo/google-photos-album-image-url-fetch.git"
+    "url": "git+https://github.com/vikas5914/google-photos-album-image-url-fetch.git"
   },
   "keywords": [
     "google-photos"
   ],
   "author": "yumetodo",
+  "contributors": [
+    "vikas5914"
+  ],
   "license": "BSL-1.0",
   "bugs": {
-    "url": "https://github.com/yumetodo/google-photos-album-image-url-fetch/issues"
+    "url": "https://github.com/vikas5914/google-photos-album-image-url-fetch/issues"
   },
-  "homepage": "https://github.com/yumetodo/google-photos-album-image-url-fetch#readme",
+  "homepage": "https://github.com/vikas5914/google-photos-album-image-url-fetch#readme",
   "devDependencies": {
     "@types/node": "^26.1.1",
     "json5": "^2.2.3",
