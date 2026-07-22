@@ -1,0 +1,29 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "unicorn", "oxc", "vitest", "node"],
+  "categories": {
+    "correctness": "error"
+  },
+  "rules": {
+    "no-throw-literal": "error",
+    "no-unused-expressions": "error",
+    "curly": ["error", "multi-line"],
+    "eqeqeq": ["error", "always", { "null": "ignore" }],
+    "no-unused-vars": [
+      "error",
+      {
+        "varsIgnorePattern": "^_",
+        "argsIgnorePattern": "^_"
+      }
+    ],
+    "no-constant-condition": ["error", { "checkLoops": false }]
+  },
+  "ignorePatterns": ["dist/**", "node_modules/**"],
+  "env": {
+    "builtin": true
+  },
+  "globals": {
+    "AbortSignal": "readonly",
+    "fetch": "readonly"
+  }
+}

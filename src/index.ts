@@ -1,7 +1,6 @@
-import { AbortSignal } from 'abort-controller';
-import equal from 'fast-deep-equal';
+import { isDeepStrictEqual } from 'node:util';
 import { getSharedAlbumHtml, parsePhase1, parsePhase2, parsePhase3 } from './impl';
-import { ImageInfo as info } from './imageInfo';
+import type { ImageInfo as info } from './imageInfo';
 import expected from './expected.json';
 import { googlePhotosSharedAlbumURL } from './constant';
 import { splitResult } from './split_result';
@@ -21,13 +20,12 @@ export async function fetchImageUrls(albumSharedUrl: string, signal?: AbortSigna
   return parsePhase3(ph2);
 }
 export function extractAppended(before: ImageInfo[], after: ImageInfo[]): info[] {
-  return after.filter(a => typeof before.find(v => equal(v, a)) === 'undefined');
+  return after.filter(a => !before.some(v => isDeepStrictEqual(v, a)));
 }
 function dateCompareOrFalse(l: number, r: number) {
   try {
     return dateCompare(l, r);
-  }
-  catch(_) {
+  } catch {
     return false;
   }
 }
@@ -41,8 +39,8 @@ export async function validityVerification(): Promise<boolean> {
   return (
     expectedAnyUrls.every((expectedAnyUrl, i) => expectedAnyUrl.some(e => e === actualUrls[i])) &&
     expectedImageUpdateDates.every((expectedImageUpdateDate, i) =>
-      dateCompareOrFalse(expectedImageUpdateDate, actualImageUpdateDates[i])
+      dateCompareOrFalse(expectedImageUpdateDate, actualImageUpdateDates[i]!)
     ) &&
-    equal(actualRest, expectedRest)
+    isDeepStrictEqual(actualRest, expectedRest)
   );
 }

@@ -1,10 +1,12 @@
 import { splitResult } from '../src/split_result';
 import { dateCompare } from '../src/date_compare';
 import type { ImageInfo } from '../src/imageInfo';
+
 const url1 =
   'https://lh3.googleusercontent.com/Pt3C6874cqkfeuIVL0XZ-UCsC6zLzeQmxq7T9-sDiPhyAgvJiKl_SCrvrMMkpuWuZ1TFkU65ilaZJrCbePRYo1q1qGTYvFV6J8gbYfZhhxQuXm2zXx6QDQkj0K-uBBUzozw7YLYQ5g';
 const url2 =
   'https://lh3.googleusercontent.com/pw/AL9nZEV1iNMg-BoRi9GwhhnWNG1SLsFVVhn3xcwh2HaFendlbRJ4DbmEVO9EhQ1SrM4H3zXcbiBYLT9F-e7oyq8I1mrluxlb-00N8dimii_zV7fbE3F080Y';
+
 describe('url: string', () => {
   it('splitResult', () => {
     const input: ImageInfo = {
@@ -25,13 +27,13 @@ describe('url: string', () => {
     const [actualRest, actualUrls, actualImageUpdateDates] = splitResult([input]);
     expect(actualRest).toStrictEqual([expectedRest]);
     expect(actualUrls).toStrictEqual([url1]);
-    expect(dateCompare(actualImageUpdateDates[0], expectedImageUpdateDate));
+    expect(dateCompare(actualImageUpdateDates[0]!, expectedImageUpdateDate)).toBe(true);
 
     // assume shallow copy
     input.height = 500;
     input.imageUpdateDate = 1317552314;
-    expect(actualRest[0].height).not.toBe(input.height);
-    expect(dateCompare(actualImageUpdateDates[0], expectedImageUpdateDate));
+    expect(actualRest[0]!.height).not.toBe(input.height);
+    expect(dateCompare(actualImageUpdateDates[0]!, expectedImageUpdateDate)).toBe(true);
   });
   it('splitResult readonly fail', () => {
     const input: ImageInfo = Object.freeze({
@@ -52,9 +54,10 @@ describe('url: string', () => {
     const [actualRest, actualUrls, actualImageUpdateDates] = splitResult([input]);
     expect(actualRest).toStrictEqual([expectedRest]);
     expect(actualUrls).toStrictEqual([url1]);
-    expect(dateCompare(actualImageUpdateDates[0], expectedImageUpdateDate));
+    expect(dateCompare(actualImageUpdateDates[0]!, expectedImageUpdateDate)).toBe(true);
   });
 });
+
 describe('url: string[]', () => {
   it('splitResult', () => {
     const input = {
@@ -76,11 +79,11 @@ describe('url: string[]', () => {
     expect(actualRest).toStrictEqual([expectedRest]);
     expect(actualUrls).toStrictEqual([[url1, url2]]);
     expect(actualImageUpdateDates.length).toEqual(1);
-    expect(dateCompare(actualImageUpdateDates[0], expectedImageUpdateDate));
+    expect(dateCompare(actualImageUpdateDates[0]!, expectedImageUpdateDate)).toBe(true);
     // assume shallow copy
     input.height = 500;
     input.imageUpdateDate = 1317552314;
-    expect(actualRest[0].height).not.toBe(input.height);
-    expect(dateCompare(actualImageUpdateDates[0], expectedImageUpdateDate));
+    expect(actualRest[0]!.height).not.toBe(input.height);
+    expect(dateCompare(actualImageUpdateDates[0]!, expectedImageUpdateDate)).toBe(true);
   });
 });

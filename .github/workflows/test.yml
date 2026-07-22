@@ -4,20 +4,28 @@ on:
   workflow_dispatch:
   push:
   schedule:
-    # UTC 表記
-    # 日本時間 毎日08:11
+    # UTC
+    # JST daily 08:11
     - cron: '11 17 * * *'
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Supported lines (July 2026): 22 Maintenance LTS, 24 Active LTS, 26 Current
+        node-version: [22, 24, 26]
 
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: ${{ matrix.node-version }}
           cache: 'npm'
       - run: npm ci
+      - run: npm run fmt:check
       - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run build
       - run: npm test

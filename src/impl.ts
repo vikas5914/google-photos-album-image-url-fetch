@@ -1,23 +1,67 @@
-import { request } from 'gaxios';
-import { ImageInfo } from './imageInfo';
-import { AbortSignal } from 'abort-controller';
-import { parse } from 'json5';
-export async function getSharedAlbumHtml(albumSharedurl: string, signal?: AbortSignal): Promise<string> {
-  return request<string>({
-    url: albumSharedurl,
-    retryConfig: { retry: 4, retryDelay: 1000 },
-    retry: true,
-    signal: signal,
-  }).then(r => r.data);
+import type { ImageInfo } from './imageInfo';
+import JSON5 from 'json5';
+
+/** 1 initial attempt + 4 retries (matches previous gaxios retry: 4). */
+const MAX_ATTEMPTS = 5;
+const RETRY_DELAY_MS = 1000;
+
+function delay(ms: number, signal?: AbortSignal): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (signal?.aborted) {
+      reject(signal.reason instanceof Error ? signal.reason : new Error('Aborted'));
+      return;
+    }
+    let timer: ReturnType<typeof setTimeout>;
+    const onAbort = () => {
+      clearTimeout(timer);
+      reject(signal?.reason instanceof Error ? signal.reason : new Error('Aborted'));
+    };
+    timer = setTimeout(() => {
+      signal?.removeEventListener('abort', onAbort);
+      resolve();
+    }, ms);
+    signal?.addEventListener('abort', onAbort, { once: true });
+  });
 }
+
+export async function getSharedAlbumHtml(albumSharedurl: string, signal?: AbortSignal): Promise<string> {
+  let lastError: unknown;
+  for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+    try {
+      const res = await fetch(albumSharedurl, { signal });
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status} ${res.statusText}`);
+      }
+      return await res.text();
+    } catch (err) {
+      lastError = err;
+      if (signal?.aborted) {
+        throw err;
+      }
+      if (attempt === MAX_ATTEMPTS - 1) {
+        break;
+      }
+      await delay(RETRY_DELAY_MS, signal);
+    }
+  }
+  throw lastError;
+}
+
 export function parsePhase1(input: string): string | null {
   const re = /(?<=AF_initDataCallback\()(?=.*data)(\{[\s\S]*?)(\);<\/script>)/g;
-  return [...input.matchAll(re)].reduce((a, b) => (a.length > b[1].length ? a : b[1]), '');
+  const matches = [...input.matchAll(re)];
+  if (matches.length === 0) {
+    return null;
+  }
+  return matches.reduce((best, match) => {
+    const candidate = match[1] ?? '';
+    return best.length > candidate.length ? best : candidate;
+  }, '');
 }
 export function parsePhase2(input: string): unknown {
   try {
-    return parse(input);
-  } catch (_) {
+    return JSON5.parse(input);
+  } catch {
     return null;
   }
 }

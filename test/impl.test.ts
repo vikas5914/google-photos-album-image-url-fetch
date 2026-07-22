@@ -1,18 +1,19 @@
 import { getSharedAlbumHtml, parsePhase1, parsePhase2, parsePhase3, isContainData } from '../src/impl';
-import { ImageInfo } from '../src/imageInfo';
+import type { ImageInfo } from '../src/imageInfo';
 import { googlePhotosSharedAlbumURL } from '../src/constant';
+
 describe('impl', () => {
   it('impl', async () => {
     const html = await getSharedAlbumHtml(googlePhotosSharedAlbumURL);
     expect(html.length).not.toBeUndefined();
-    expect(10 < html.length).toBe(true);
+    expect(html.length).toBeGreaterThan(10);
     // parsePhase1
     const ph1 = parsePhase1(html);
     expect(ph1).not.toBeNull();
     // parsePhase2
     const ph2 = parsePhase2(ph1 as string);
     if (!isContainData(ph2)) {
-      throw new Error('missing data propaty');
+      throw new Error('missing data property');
     }
     const ph2Data = ph2.data;
     expect(Array.isArray(ph2Data)).toBe(true);
