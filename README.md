@@ -102,15 +102,31 @@ for (const item of items ?? []) {
 
 ### Sample previews
 
-These embeds use `posterUrl` values from the sample album (same durable googleusercontent hosts CI exercises). If the images below still load, the URLs remain valid.
+All items from the sample album ([photos.app.goo.gl/ea8rFM2SMzp7epUZ6](https://photos.app.goo.gl/ea8rFM2SMzp7epUZ6)) — **5 photos + 1 video**. Embeds use durable `posterUrl` values (`=w400`). If they still load, the URLs remain valid.
 
-**Photo**
+**1. Photo** (4000×3000)
 
-![sample photo](https://lh3.googleusercontent.com/pw/AP1GczPZ_oCmthR3rua7uNEp27xhHfdqAjx0EBkf19CGk4cF79rMMwlc4zwUVWNR2R1-0T4jMmTmlhnqX0bEsAPuUBsKz-HLHyeQf09klbNjpqOscCnbIgk=w400)
+![photo 1](https://lh3.googleusercontent.com/pw/AP1GczPZ_oCmthR3rua7uNEp27xhHfdqAjx0EBkf19CGk4cF79rMMwlc4zwUVWNR2R1-0T4jMmTmlhnqX0bEsAPuUBsKz-HLHyeQf09klbNjpqOscCnbIgk=w400)
 
-**Video poster** (`isVideo: true` — still frame from `posterUrl`, not the video file)
+**2. Photo** (2560×1920)
 
-![sample video poster](https://lh3.googleusercontent.com/pw/AP1GczPNMCXxwTMZnmWVVtVtCyeo8urgS5I_lEyVzcxEZ41oQBzwKw2DVAZzImrLjpjD02iXbSNoVULdGQ4EJ_nq9TMvrco_zpEgEln6eXBhXQ-eKExjvIU=w400)
+![photo 2](https://lh3.googleusercontent.com/pw/AP1GczNBALePYcc1vDxI34Q2tfKEeK9mu6pzbkBVYAjhkc62oFq3eH5JTq1WAK1Y3thS4Vt0hSVc8Ne3w8clgHPo3UGXWY2o8j23RhevOQTs5EfY3BEPzFU=w400)
+
+**3. Photo** (5184×3888)
+
+![photo 3](https://lh3.googleusercontent.com/pw/AP1GczPvQC8KIpOFcytCoU76zXC6EKSxql4DBsoNPDqGCf5oi_yND3d7zHgbEX4315nFIOcPMI_LTFzQmETX-T1X9LEgk8yvrOjJVg5RE30EJdHsTYSdTUg=w400)
+
+**4. Video poster** (1920×1080, `isVideo: true`) — still frame from `posterUrl`, not the downloadable file (`videoUrl` = `${url}=dv`)
+
+![video poster](https://lh3.googleusercontent.com/pw/AP1GczPNMCXxwTMZnmWVVtVtCyeo8urgS5I_lEyVzcxEZ41oQBzwKw2DVAZzImrLjpjD02iXbSNoVULdGQ4EJ_nq9TMvrco_zpEgEln6eXBhXQ-eKExjvIU=w400)
+
+**5. Photo** (5184×3888)
+
+![photo 5](https://lh3.googleusercontent.com/pw/AP1GczMiSlo6b_y83JhLLQ0AkvVb4Qjrc2MK3llqBw0mbJmBeTjnHzaekpmQuThXTsltshO8dD23U_KtqsQ7I9MM_-8CnPXwn1SvL5PI1GIzq52ZjVlTrTs=w400)
+
+**6. Photo** (3024×4032)
+
+![photo 6](https://lh3.googleusercontent.com/pw/AP1GczNDgYRYS2q9um62YfKclx2_jhtyg3deUx1j6N2ppN8dv5ydT1vstZx3AW_9dC2CUoZTwQzt-4aIgVrlrrO4yui398mOrSN16zshQ52CjMafqtjpUE0=w400)
 
 ## `extractAppended`
 
