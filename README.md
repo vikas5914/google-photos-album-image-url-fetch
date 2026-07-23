@@ -100,6 +100,18 @@ for (const item of items ?? []) {
 }
 ```
 
+### Sample previews
+
+These embeds use `posterUrl` values from the sample album (same durable googleusercontent hosts CI exercises). If the images below still load, the URLs remain valid.
+
+**Photo**
+
+![sample photo](https://lh3.googleusercontent.com/pw/AP1GczPZ_oCmthR3rua7uNEp27xhHfdqAjx0EBkf19CGk4cF79rMMwlc4zwUVWNR2R1-0T4jMmTmlhnqX0bEsAPuUBsKz-HLHyeQf09klbNjpqOscCnbIgk=w400)
+
+**Video poster** (`isVideo: true` — still frame from `posterUrl`, not the video file)
+
+![sample video poster](https://lh3.googleusercontent.com/pw/AP1GczPNMCXxwTMZnmWVVtVtCyeo8urgS5I_lEyVzcxEZ41oQBzwKw2DVAZzImrLjpjD02iXbSNoVULdGQ4EJ_nq9TMvrco_zpEgEln6eXBhXQ-eKExjvIU=w400)
+
 ## `extractAppended`
 
 Diff two snapshots when you re-fetch an album after changes (e.g. after Photos API `batchCreate`):
