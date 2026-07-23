@@ -1,0 +1,29 @@
+amends "package://github.com/jdx/hk/releases/download/v1.52.0/hk@1.52.0#/Config.pkl"
+import "package://github.com/jdx/hk/releases/download/v1.52.0/hk@1.52.0#/Builtins.pkl"
+
+// Format staged files with oxfmt on commit (local package binary via PATH).
+local formatters = new Mapping<String, Step> {
+  ["oxfmt"] = (Builtins.oxfmt) {
+    // Prefer the project's local binary so hooks work without a global oxfmt install.
+    check = "npx oxfmt --check {{ files }}"
+    check_list_files = "npx oxfmt --list-different {{ files }}"
+    fix = "npx oxfmt --write {{ files }}"
+    batch = true
+  }
+}
+
+hooks {
+  ["pre-commit"] {
+    fix = true // auto-format and re-stage
+    stash = "git" // protect unstaged edits while fixers run
+    steps = formatters
+  }
+  // Manual: `hk check` / `hk fix`
+  ["check"] {
+    steps = formatters
+  }
+  ["fix"] {
+    fix = true
+    steps = formatters
+  }
+}

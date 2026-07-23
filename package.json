@@ -29,7 +29,10 @@
     "lint": "oxlint .",
     "lint:fix": "oxlint --fix .",
     "fmt": "oxfmt .",
-    "fmt:check": "oxfmt --check ."
+    "fmt:check": "oxfmt --check .",
+    "hooks:install": "hk install",
+    "hooks:check": "hk check",
+    "hooks:fix": "hk fix"
   },
   "repository": {
     "type": "git",
