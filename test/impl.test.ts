@@ -49,18 +49,7 @@ describe('impl', () => {
       data: [
         null,
         [
-          [
-            'photo-uid',
-            [photoUrl, 640, 480],
-            1000,
-            'tok',
-            0,
-            2000,
-            [],
-            [],
-            2,
-            { '15': 1 },
-          ],
+          ['photo-uid', [photoUrl, 640, 480], 1000, 'tok', 0, 2000, [], [], 2, { '15': 1 }],
           [
             'video-uid',
             [videoUrl, 1080, 1920],
@@ -71,7 +60,10 @@ describe('impl', () => {
             [],
             [],
             2,
-            { '15': 1, [VIDEO_META_KEY]: [null, null, null, null, null, 1, null, null, null, null, null, null, null, [videoUrl]] },
+            {
+              '15': 1,
+              [VIDEO_META_KEY]: [null, null, null, null, null, 1, null, null, null, null, null, null, null, [videoUrl]],
+            },
           ],
         ],
       ],
@@ -103,4 +95,3 @@ describe('impl', () => {
     ]);
   });
 });
-
