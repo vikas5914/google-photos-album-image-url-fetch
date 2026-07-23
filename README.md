@@ -2,7 +2,7 @@
 
 [![Node CI](https://github.com/vikas5914/google-photos-album-image-url-fetch/actions/workflows/test.yml/badge.svg)](https://github.com/vikas5914/google-photos-album-image-url-fetch/actions/workflows/test.yml)
 
-Extract public image URLs from a Google Photos **shared album** URL — no Google Photos API credentials required.
+Extract public image and video URLs from a Google Photos **shared album** URL — no Google Photos API credentials required.
 
 - **ESM-only** package (`"type": "module"`)
 - **Zero runtime dependencies** (JSON5 is bundled)
@@ -20,7 +20,7 @@ npm install google-photos-album-image-url-fetch
 ```ts
 import { fetchImageUrls } from 'google-photos-album-image-url-fetch';
 
-const images = await fetchImageUrls('https://photos.app.goo.gl/oJEMCo5g5eUptS2fA');
+const images = await fetchImageUrls('https://photos.app.goo.gl/ea8rFM2SMzp7epUZ6');
 console.log(images);
 ```
 
@@ -30,7 +30,7 @@ With cancellation:
 import { fetchImageUrls } from 'google-photos-album-image-url-fetch';
 
 const ac = new AbortController();
-const images = await fetchImageUrls('https://photos.app.goo.gl/oJEMCo5g5eUptS2fA', ac.signal);
+const images = await fetchImageUrls('https://photos.app.goo.gl/ea8rFM2SMzp7epUZ6', ac.signal);
 // ac.abort();
 ```
 
@@ -47,35 +47,56 @@ Fetches a shared album page and returns image metadata, or `null` if parsing fai
 ```ts
 import { fetchImageUrls, type ImageInfo } from 'google-photos-album-image-url-fetch';
 
-const images: ImageInfo[] | null = await fetchImageUrls('https://photos.app.goo.gl/oJEMCo5g5eUptS2fA');
+const images: ImageInfo[] | null = await fetchImageUrls('https://photos.app.goo.gl/ea8rFM2SMzp7epUZ6');
 ```
 
-Example shape:
+Example shape (from the sample album — photos + video):
 
 ```json
 [
   {
-    "uid": "AF1QipO4_Y5pseqWDPSlY7AAo0wmg76xW4gX0kOz8-p_",
-    "url": "https://lh3.googleusercontent.com/pw/AP1GczNvhVFAxxjKnpWDoNcWqXQLshSvKgC_L2SHPF6AsdST128i-EPTP77oIJxzNkV7EQUZremYChDrWilSZw0bunJMvtM415hDUMCOWAHaOQEsyi4JfXA",
-    "width": 640,
-    "height": 480,
-    "imageUpdateDate": 1317552314000,
-    "albumAddDate": 1564229558506
+    "uid": "AF1QipMIuH7M7OedcncrQJVCZydYiVa_0cO1xpT_ZUQ",
+    "url": "https://lh3.googleusercontent.com/pw/AP1GczPZ_oCmthR3rua7uNEp27xhHfdqAjx0EBkf19CGk4cF79rMMwlc4zwUVWNR2R1-0T4jMmTmlhnqX0bEsAPuUBsKz-HLHyeQf09klbNjpqOscCnbIgk",
+    "posterUrl": "https://lh3.googleusercontent.com/pw/AP1GczPZ_oCmthR3rua7uNEp27xhHfdqAjx0EBkf19CGk4cF79rMMwlc4zwUVWNR2R1-0T4jMmTmlhnqX0bEsAPuUBsKz-HLHyeQf09klbNjpqOscCnbIgk",
+    "videoUrl": null,
+    "isVideo": false,
+    "width": 4000,
+    "height": 3000,
+    "imageUpdateDate": 1535348376000,
+    "albumAddDate": 1784729658681
+  },
+  {
+    "uid": "AF1QipMMhTEnzITdwWrC9EPH_QjTIb4pKgsezfKHfJM",
+    "url": "https://lh3.googleusercontent.com/pw/AP1GczPNMCXxwTMZnmWVVtVtCyeo8urgS5I_lEyVzcxEZ41oQBzwKw2DVAZzImrLjpjD02iXbSNoVULdGQ4EJ_nq9TMvrco_zpEgEln6eXBhXQ-eKExjvIU",
+    "posterUrl": "https://lh3.googleusercontent.com/pw/AP1GczPNMCXxwTMZnmWVVtVtCyeo8urgS5I_lEyVzcxEZ41oQBzwKw2DVAZzImrLjpjD02iXbSNoVULdGQ4EJ_nq9TMvrco_zpEgEln6eXBhXQ-eKExjvIU",
+    "videoUrl": "https://lh3.googleusercontent.com/pw/AP1GczPNMCXxwTMZnmWVVtVtCyeo8urgS5I_lEyVzcxEZ41oQBzwKw2DVAZzImrLjpjD02iXbSNoVULdGQ4EJ_nq9TMvrco_zpEgEln6eXBhXQ-eKExjvIU=dv",
+    "isVideo": true,
+    "width": 1920,
+    "height": 1080,
+    "imageUpdateDate": 1696152201000,
+    "albumAddDate": 1784729515451
   }
 ]
 ```
 
 Notes:
 
-- `url` is a durable googleusercontent URL (not the short-lived base URL from the Photos Library API).
+- `url` / `posterUrl` are durable googleusercontent URLs (not the short-lived base URL from the Photos Library API). For videos, they serve the **poster** (still image), not the video file.
+- `isVideo` is `true` for video items. Detection uses reverse-engineered shared-page metadata and is best-effort.
+- `videoUrl` is `${url}=dv` when `isVideo` is true (downloadable `video/mp4` or `video/quicktime`); otherwise `null`.
 - `imageUpdateDate` and `albumAddDate` are Unix epoch milliseconds.
-- Default `url` is a smaller preview. For full size, append dimensions:
+- Default poster/image URL is a smaller preview. For full size stills, append dimensions:
 
 ```ts
-const images = await fetchImageUrls(albumUrl);
-for (const pic of images ?? []) {
-  const full = `${pic.url}=w${pic.width}-h${pic.height}`;
-  // fetch(full)
+const items = await fetchImageUrls(albumUrl);
+for (const item of items ?? []) {
+  if (item.isVideo) {
+    // item.posterUrl — still frame
+    // item.videoUrl  — downloadable video (=dv)
+  } else {
+    const full = `${item.posterUrl}=w${item.width}-h${item.height}`;
+    // fetch(full)
+  }
 }
 ```
 

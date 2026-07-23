@@ -71,6 +71,21 @@ export interface ContainData {
 export const isContainData = (o: unknown): o is ContainData => typeof o === 'object' && o != null && 'data' in o;
 const rawIsArray = Array.isArray;
 const isArray = (a: unknown): a is unknown[] => rawIsArray(a);
+
+/**
+ * Undocumented Google Photos client metadata key present on video items in shared-album HTML.
+ * Not part of a public API; detection is best-effort and may change with Photos frontend updates.
+ */
+export const VIDEO_META_KEY = '76647426';
+
+/** Video download suffix for googleusercontent base URLs (same convention as Photos Library API). */
+export const VIDEO_URL_SUFFIX = '=dv';
+
+function isVideoEntry(entry: unknown[]): boolean {
+  const meta = entry[9];
+  return typeof meta === 'object' && meta != null && VIDEO_META_KEY in meta;
+}
+
 export function parsePhase3(input: unknown): ImageInfo[] | null {
   if (!isContainData(input)) {
     return null;
@@ -104,9 +119,13 @@ export function parsePhase3(input: unknown): ImageInfo[] | null {
       if (typeof url !== 'string' || typeof width !== 'number' || typeof height !== 'number') {
         return null;
       }
+      const isVideo = isVideoEntry(e);
       return {
         uid: uid,
         url: url,
+        posterUrl: url,
+        videoUrl: isVideo ? `${url}${VIDEO_URL_SUFFIX}` : null,
+        isVideo: isVideo,
         width: width,
         height: height,
         imageUpdateDate: imageUpdateDate,

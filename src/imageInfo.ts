@@ -16,8 +16,24 @@ export interface ImageInfo {
    * `https://photos.google.com/share/${albumUID}/photo/${uid}?key=${key}`
    */
   uid: string;
-  /** url of image binary */
+  /**
+   * Base googleusercontent URL for this item.
+   * Serves a still image (photo, or video poster/thumbnail). Kept for backward compatibility;
+   * prefer `posterUrl` / `videoUrl` when you care about media type.
+   */
   url: string;
+  /**
+   * Still-image URL (photo binary, or video poster/thumbnail).
+   * Same base URL as `url`. Append `=w${width}-h${height}` for a larger size.
+   */
+  posterUrl: string;
+  /**
+   * Downloadable video URL when `isVideo` is true (`${url}=dv`); otherwise `null`.
+   * Content type is typically `video/mp4` or `video/quicktime`.
+   */
+  videoUrl: string | null;
+  /** True when the album entry is a video (detected via shared-page metadata). */
+  isVideo: boolean;
   width: number;
   height: number;
   /** The epoch time when image was updated */

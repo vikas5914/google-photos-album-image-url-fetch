@@ -7,21 +7,30 @@ const url1 =
 const url2 =
   'https://lh3.googleusercontent.com/pw/AL9nZEV1iNMg-BoRi9GwhhnWNG1SLsFVVhn3xcwh2HaFendlbRJ4DbmEVO9EhQ1SrM4H3zXcbiBYLT9F-e7oyq8I1mrluxlb-00N8dimii_zV7fbE3F080Y';
 
+function photoInfo(url: string, overrides: Partial<ImageInfo> = {}): ImageInfo {
+  return {
+    albumAddDate: 1564229558506,
+    height: 400,
+    imageUpdateDate: 1317552314000,
+    uid: 'AF1QipO4_Y5pseqWDPSlY7AAo0wmg76xW4gX0kOz8-p_',
+    url,
+    posterUrl: url,
+    videoUrl: null,
+    isVideo: false,
+    width: 640,
+    ...overrides,
+  };
+}
+
 describe('url: string', () => {
   it('splitResult', () => {
-    const input: ImageInfo = {
-      albumAddDate: 1564229558506,
-      height: 400,
-      imageUpdateDate: 1317552314000,
-      uid: 'AF1QipO4_Y5pseqWDPSlY7AAo0wmg76xW4gX0kOz8-p_',
-      url: url1,
-      width: 640,
-    };
+    const input = photoInfo(url1);
     const expectedRest = {
       albumAddDate: 1564229558506,
       height: 400,
       uid: 'AF1QipO4_Y5pseqWDPSlY7AAo0wmg76xW4gX0kOz8-p_',
       width: 640,
+      isVideo: false,
     };
     const expectedImageUpdateDate = 1317552314000;
     const [actualRest, actualUrls, actualImageUpdateDates] = splitResult([input]);
@@ -36,19 +45,13 @@ describe('url: string', () => {
     expect(dateCompare(actualImageUpdateDates[0]!, expectedImageUpdateDate)).toBe(true);
   });
   it('splitResult readonly fail', () => {
-    const input: ImageInfo = Object.freeze({
-      albumAddDate: 1564229558506,
-      height: 400,
-      imageUpdateDate: 1317552314000,
-      uid: 'AF1QipO4_Y5pseqWDPSlY7AAo0wmg76xW4gX0kOz8-p_',
-      url: url1,
-      width: 640,
-    });
+    const input: ImageInfo = Object.freeze(photoInfo(url1));
     const expectedRest = {
       albumAddDate: 1564229558506,
       height: 400,
       uid: 'AF1QipO4_Y5pseqWDPSlY7AAo0wmg76xW4gX0kOz8-p_',
       width: 640,
+      isVideo: false,
     };
     const expectedImageUpdateDate = 1317552314000;
     const [actualRest, actualUrls, actualImageUpdateDates] = splitResult([input]);
@@ -66,6 +69,9 @@ describe('url: string[]', () => {
       imageUpdateDate: 1317552314000,
       uid: 'AF1QipO4_Y5pseqWDPSlY7AAo0wmg76xW4gX0kOz8-p_',
       url: [url1, url2],
+      posterUrl: [url1, url2],
+      videoUrl: null as string | null,
+      isVideo: false,
       width: 640,
     };
     const expectedRest = {
@@ -73,6 +79,7 @@ describe('url: string[]', () => {
       height: 400,
       uid: 'AF1QipO4_Y5pseqWDPSlY7AAo0wmg76xW4gX0kOz8-p_',
       width: 640,
+      isVideo: false,
     };
     const expectedImageUpdateDate = 1317552314000;
     const [actualRest, actualUrls, actualImageUpdateDates] = splitResult([input]);

@@ -6,7 +6,7 @@
  */
 import { fetchImageUrls, extractAppended, validityVerification } from '../dist/index.mjs';
 
-const ALBUM_URL = 'https://photos.app.goo.gl/oJEMCo5g5eUptS2fA';
+const ALBUM_URL = 'https://photos.app.goo.gl/ea8rFM2SMzp7epUZ6';
 
 function fullSizeUrl(info) {
   return `${info.url}=w${info.width}-h${info.height}`;
@@ -24,10 +24,14 @@ async function main() {
   console.log(`   found ${images.length} image(s)\n`);
 
   for (const [i, img] of images.entries()) {
-    console.log(`   [${i}] uid=${img.uid}`);
+    console.log(`   [${i}] uid=${img.uid} isVideo=${img.isVideo}`);
     console.log(`       size=${img.width}x${img.height}`);
-    console.log(`       url=${img.url.slice(0, 72)}…`);
-    console.log(`       full=${fullSizeUrl(img).slice(0, 80)}…`);
+    console.log(`       poster=${img.posterUrl.slice(0, 72)}…`);
+    if (img.isVideo) {
+      console.log(`       video=${img.videoUrl?.slice(0, 72)}…`);
+    } else {
+      console.log(`       full=${fullSizeUrl(img).slice(0, 80)}…`);
+    }
     console.log(
       `       imageUpdateDate=${new Date(img.imageUpdateDate).toISOString()} albumAddDate=${new Date(img.albumAddDate).toISOString()}`
     );

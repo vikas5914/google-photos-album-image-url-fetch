@@ -19,9 +19,18 @@ describe('test', () => {
   });
   it('extractAppended', () => {
     const after: GooglePhotosAlbum.ImageInfo[] = expected.map((e: ImageInfoLike) => {
-      const ret = { ...e };
-      ret.url = Array.isArray(e.url) ? e.url[0]! : e.url;
-      return ret as GooglePhotosAlbum.ImageInfo;
+      const baseUrl = Array.isArray(e.url) ? e.url[0]! : e.url;
+      return {
+        uid: e.uid,
+        url: baseUrl,
+        posterUrl: baseUrl,
+        videoUrl: e.isVideo ? `${baseUrl}=dv` : null,
+        isVideo: e.isVideo ?? false,
+        width: e.width,
+        height: e.height,
+        imageUpdateDate: e.imageUpdateDate,
+        albumAddDate: e.albumAddDate,
+      };
     });
     const before: GooglePhotosAlbum.ImageInfo[] = [];
     const appended: GooglePhotosAlbum.ImageInfo[] = [];
